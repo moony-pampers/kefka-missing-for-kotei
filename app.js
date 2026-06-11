@@ -694,10 +694,10 @@ function wanderingTarget(player, base, settleAt) {
   };
 }
 
-function timedTarget(player, destination, staging, deadline) {
+function timedTarget(player, destination, staging, deadline, arrivalMargin = NPC_ARRIVAL_MARGIN) {
   const remaining = deadline - state.time;
   const travelTime = distance(player, destination) / PLAYER_MOVE_SPEED;
-  const target = remaining <= travelTime + NPC_ARRIVAL_MARGIN ? destination : staging;
+  const target = remaining <= travelTime + arrivalMargin ? destination : staging;
   return wanderingTarget(player, target, deadline);
 }
 
@@ -711,11 +711,13 @@ function npcTarget(player) {
       if (sourceRound === 8) {
         return wanderingTarget(player, stack, base + 4.15);
       }
+      // 移動1：塔踏み→過去未来確定。早めに動き出す（arrivalMargin=4s）
       return timedTarget(
         player,
         stack,
         assignmentPositionFor(player, sourceRound),
-        base + 5
+        base + 5,
+        4
       );
     }
     if (sourceRound === 8 && state.resolvedLocks.has(sourceRound) &&
@@ -729,6 +731,7 @@ function npcTarget(player) {
     }
   }
 
+  // 移動2：過去未来確定→塔踏み。従来通り（arrivalMargin=NPC_ARRIVAL_MARGIN）
   return timedTarget(
     player,
     assignmentPositionFor(player, round),
