@@ -84,9 +84,9 @@ const TOWER_SIDE_PRIORITY_METHODS = {
     categories: ["healer", "tank", "melee", "ranged"],
   },
   keepPrevious: {
-    name: "前回塔維持（被りは遠い側が移動）",
+    name: "前回塔維持（被りは左H＜T＜近D＜遠D右）",
     mode: "keep-previous",
-    // 前回と同じ塔を優先し、重複時はボスから遠い側が反対へ移る。
+    // 前回と同じ塔を優先し、重複時は左右担当（H1/H2＜MT/ST＜D1/D2＜D3/D4）で本来の側に近い方が残る。
     categories: ["healer", "tank", "melee", "ranged"],
   },
 };
@@ -1448,8 +1448,7 @@ function setupFixedModal() {
   selectedSpread = FIXED_SPREAD;
   selectedTowerPriority = FIXED_TOWER_PRIORITY;
   UI.strategyName.textContent =
-    `${STRATEGIES[FIXED_STRATEGY].name} / ${SPREAD_METHODS[FIXED_SPREAD].name} / ` +
-    `${TOWER_SIDE_PRIORITY_METHODS[FIXED_TOWER_PRIORITY].name} · 1238 / 4567`;
+    `組み分け：りーん式（同ロールで2人組） / 散開位置：はいじあ / 次の塔を踏む優先順位：前回塔維持（被りは左H＜T＜近D＜遠D右）`;
   UI.selectionTitle.textContent = "担当ロールを選択";
   UI.roleSelection.classList.remove("hidden");
 }
